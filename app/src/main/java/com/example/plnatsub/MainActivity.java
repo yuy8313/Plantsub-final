@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     String mCurrentPhotoPath;
     String formatDate, android_id;
     // server의 url을 적어준다
-    private final String BASE_URL = "http://85b809a8712a.ngrok.io";  //url주소
+    private final String BASE_URL = "http://ac6dc08d6af5.ngrok.io";  //url주소
 //    private final String BASE_URL = "http://127.0.0.1:5000/";
 
     @Override
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         main_btn1 = findViewById(R.id.main_btn1);
         main_btn2 = findViewById(R.id.main_btn2);
         main_btn3 = findViewById(R.id.main_btn3);
-        gallery_img = findViewById(R.id.gallery_img);
+        //gallery_img = findViewById(R.id.gallery_img);
 
         // 권한 체크
         TedPermission.with(getApplicationContext())
@@ -99,6 +99,14 @@ public class MainActivity extends AppCompatActivity {
                 intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
                 intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, PICK_FROM_ALBUM);
+            }
+        });
+
+        main_btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), PlantBook.class);
+                startActivity(intent);
             }
         });
         initMyAPI(BASE_URL);
@@ -139,7 +147,8 @@ public class MainActivity extends AppCompatActivity {
                     cropImage();
                 case CROP_FROM_ALBUM:
                     Bitmap photo = BitmapFactory.decodeFile(albumURI.getPath());
-                    gallery_img.setImageBitmap(photo); // 사진나옴
+
+                    //gallery_img.setImageBitmap(photo); // 사진나옴
                     Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 
                     if(album == false){
@@ -240,23 +249,25 @@ public class MainActivity extends AppCompatActivity {
 
         mMyAPI = retrofit.create(MyAPI.class);
 
+        Intent intent = new Intent(getApplicationContext(), Loading.class);
+        startActivity(intent); //로딩화면 출력
 
         Call<AccountItem> call = mMyAPI.upload(images,android_id,formatDate);
         call.enqueue(new Callback<AccountItem>() {
             @Override
             public void onResponse(Call<AccountItem> call, Response<AccountItem> response) {
                 Log.i("good", "good");
-                //getplant();
             }
 
             @Override
             public void onFailure(Call<AccountItem> call, Throwable t) {
                 Log.i(TAG,"Fail msg : " + t.getMessage());
 
-//                Intent intent = new Intent(getApplicationContext(), Loading.class);
-//                startActivity(intent); //로딩화면 출력
+
 
                 getplant();
+
+
             }
         });
 
@@ -282,11 +293,11 @@ public class MainActivity extends AppCompatActivity {
 
                     for(AccountItem accountItem:versionList){
                         first_txt += accountItem.getFirst_name();
-                        first_percent_txt += "확률: "+accountItem.getFirst_percent();
+                        first_percent_txt += "일치율: "+accountItem.getFirst_percent();
                         second_txt += accountItem.getSecond_name();
-                        second_percent_txt += "확률:"+accountItem.getSecond_percent();
+                        second_percent_txt += "일치율:"+accountItem.getSecond_percent();
 
-                        my_images += "http://85b809a8712a.ngrok.io"+accountItem.getImages();
+                        my_images += "http://ac6dc08d6af5.ngrok.io"+accountItem.getImages();  //url주소
                     }
                     final String one = first_txt;
                     final String two = second_txt;
@@ -319,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d(TAG,"ㅅ"+one);
                                     Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                    first_img_txt ="http://85b809a8712a.ngrok.io"+accountItem.getImage();  //url주소
+                                    first_img_txt ="http://ac6dc08d6af5.ngrok.io"+accountItem.getImage();  //url주소
 
                                 }
                                 intent.putExtra("my_plant_images",my_plant_images);
@@ -351,11 +362,12 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d(TAG,"ㅅ"+two);
                                     Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                    second_img_txt ="http://85b809a8712a.ngrok.io"+accountItem.getImage();  //url주소
+                                    second_img_txt ="http://ac6dc08d6af5.ngrok.io"+accountItem.getImage();  //url주소
 
                                 }
                                 intent.putExtra("my_plant_images",my_plant_images);
                                 intent.putExtra("second_img_txt",second_img_txt);
+
 
                                 startActivity(intent);
                             } else {

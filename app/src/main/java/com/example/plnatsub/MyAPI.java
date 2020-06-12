@@ -57,4 +57,7 @@ public interface MyAPI{
     @GET("/book_list/{device}/")
     Call<List<AccountItem>> get_book_list(@Path("device") String device);
 
+    @GET("/my_book_detail/{device}/{id}")
+    Call<List<AccountItem>> get_my_book_detail(@Path("device") String device, @Path("id") String id);
+
 }

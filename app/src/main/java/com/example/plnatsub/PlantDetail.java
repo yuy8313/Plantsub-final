@@ -25,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlantDetail extends AppCompatActivity {
 
-    private final String BASE_URL = "http://85b809a8712a.ngrok.io";  //url주소
+    private final String BASE_URL = "http://ac6dc08d6af5.ngrok.io";  //url주소
 
     private MyAPI mMyAPI;
     private final  String TAG = getClass().getSimpleName();
