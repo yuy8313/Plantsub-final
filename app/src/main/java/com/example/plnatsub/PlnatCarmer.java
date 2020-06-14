@@ -79,7 +79,7 @@ public class PlnatCarmer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carmer);
 
-        btn_cature = findViewById(R.id.btn_cature); //재촬영 선언
+        btn_cature = findViewById(R.id.btn_capture); //재촬영 선언
         btn_complete = findViewById(R.id.btn_complete); //완료버튼 선언
         image_result = findViewById(R.id.image_result); // 이미지뷰 선언
 
@@ -247,7 +247,7 @@ public class PlnatCarmer extends AppCompatActivity {
                         first_txt += accountItem.getFirst_name();
                         first_percent_txt += "일치율: "+accountItem.getFirst_percent();
                         second_txt += accountItem.getSecond_name();
-                        second_percent_txt += "일치율:"+accountItem.getSecond_percent();
+                        second_percent_txt += "일치율: "+accountItem.getSecond_percent();
 
                         my_images += "http://ac6dc08d6af5.ngrok.io"+accountItem.getImages();  //url 주소
                     }

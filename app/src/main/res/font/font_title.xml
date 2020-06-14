@@ -9,4 +9,16 @@
         android:fontStyle="normal"
         android:fontWeight="400"
         android:font="@font/cookierun"/>
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/maplestory_light"/>
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/maplestory_bold"/>
+    <font
+    android:fontStyle="normal"
+    android:fontWeight="400"
+    android:font="@font/chosun_centennial"/>
 </font-family>
