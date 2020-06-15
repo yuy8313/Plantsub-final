@@ -16,7 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PlantBookDetail"></activity>
         <activity android:name=".Loading" />
         <activity android:name=".SearchResult" />
         <activity android:name=".MainActivity">

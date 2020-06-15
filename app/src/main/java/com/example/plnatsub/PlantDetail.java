@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,11 +26,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlantDetail extends AppCompatActivity {
 
-    private final String BASE_URL = "http://ac6dc08d6af5.ngrok.io";  //url주소
+    private final String BASE_URL = "http://655bd3efc4ec.ngrok.io";  //url주소
 
     private MyAPI mMyAPI;
     private final  String TAG = getClass().getSimpleName();
-
+    Button addGallery,goGallery;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +40,8 @@ public class PlantDetail extends AppCompatActivity {
         TextView flower_flower = (TextView)findViewById(R.id.flower_flower);
         ImageView flower_img = (ImageView)findViewById(R.id.flower_img);
         TextView flower_content = (TextView)findViewById(R.id.flower_content);
-        Button addGallery = (Button)findViewById(R.id.addGallery);
+        addGallery = findViewById(R.id.addGallery);
+        goGallery = findViewById(R.id.goGallery);
 
 
         Intent intent = getIntent();
@@ -65,6 +67,8 @@ public class PlantDetail extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("아나", android_id);
 
+                Toast.makeText(getApplicationContext(),"도감에 추가 완료", Toast.LENGTH_SHORT).show();
+
                 Gson gson = new GsonBuilder().setLenient().create();
 
                 Retrofit retrofit = new Retrofit.Builder()
@@ -80,16 +84,25 @@ public class PlantDetail extends AppCompatActivity {
                     public void onResponse(Call<AccountItem> call, Response<AccountItem> response) {
                         Log.i("도감 good", "good");
 //                        Booklist();
+
                     }
 
                     @Override
                     public void onFailure(Call<AccountItem> call, Throwable t) {
                         Log.i(TAG,"도감 Fail msg : " + t.getMessage());
 //                        Booklist();
-                        Intent intent = new Intent(getApplicationContext(), PlantBook.class);
-                        startActivity(intent);
+
                     }
                 });
+            }
+        });
+
+        goGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getApplicationContext(), PlantBook.class);
+                startActivity(intent);
             }
         });
     }

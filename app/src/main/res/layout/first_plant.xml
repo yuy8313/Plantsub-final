@@ -20,6 +20,7 @@
             android:layout_weight="4"
             android:orientation="vertical">
 
+
             <Button
                 android:id="@+id/addGallery"
                 android:padding="10dp"
@@ -70,6 +71,18 @@
                 android:fontFamily="@font/chosun_centennial"
                 android:textColor="#000000"
                 android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/goGallery"
+                android:padding="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_carmer"
+                android:fontFamily="@font/maplestory_bold"
+                android:textSize="25dp"
+                android:text="나의 도감"
+                />
 
 
         </LinearLayout>

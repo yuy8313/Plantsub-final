@@ -62,7 +62,7 @@ public class PlnatCarmer extends AppCompatActivity {
     private MyAPI mMyAPI;
     private final  String TAG = getClass().getSimpleName();
     // server의 url을 적어준다
-    private final String BASE_URL = "http://ac6dc08d6af5.ngrok.io";  //url주소
+    private final String BASE_URL = "http://655bd3efc4ec.ngrok.io";  //url주소
     //    private final String BASE_URL = "http://127.0.0.1:5000/";
     Boolean album = false;
     private static final int REQUEST_IMAGE_CAPTURE = 672;
@@ -172,6 +172,8 @@ public class PlnatCarmer extends AppCompatActivity {
 //            getaccount();
             ImageUpdate();
 
+            Intent intentL = new Intent(getApplicationContext(), Loading.class);
+            startActivity(intentL); //로딩화면 출력
 
             try {
                 exif = new ExifInterface(imageFilePath);
@@ -249,7 +251,7 @@ public class PlnatCarmer extends AppCompatActivity {
                         second_txt += accountItem.getSecond_name();
                         second_percent_txt += "일치율: "+accountItem.getSecond_percent();
 
-                        my_images += "http://ac6dc08d6af5.ngrok.io"+accountItem.getImages();  //url 주소
+                        my_images += "http://655bd3efc4ec.ngrok.io"+accountItem.getImages();  //url 주소
                     }
                     final String one = first_txt;
                     final String two = second_txt;
@@ -272,9 +274,11 @@ public class PlnatCarmer extends AppCompatActivity {
 
                     //intent.putExtra("first_img", );
 
+
                     btn_complete.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+
                             Call<List<AccountItem>> plantconCall = mMyAPI.get_plant_con(one);
                             plantconCall.enqueue(new Callback<List<AccountItem>>() {
                                 @Override
@@ -287,7 +291,7 @@ public class PlnatCarmer extends AppCompatActivity {
                                             Log.d(TAG,"ㅅ"+one);
                                             Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                             first_img_txt ="http://ac6dc08d6af5.ngrok.io"+accountItem.getImage();  //url주소
+                                             first_img_txt ="http://655bd3efc4ec.ngrok.io"+accountItem.getImage();  //url주소
 
                                         }
                                         intent.putExtra("my_plant_images",my_plant_images);
@@ -319,7 +323,7 @@ public class PlnatCarmer extends AppCompatActivity {
                                             Log.d(TAG,"ㅅ"+two);
                                             Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                            second_img_txt ="http://ac6dc08d6af5.ngrok.io"+accountItem.getImage();  //url주소
+                                            second_img_txt ="http://655bd3efc4ec.ngrok.io"+accountItem.getImage();  //url주소
 
                                         }
                                         intent.putExtra("my_plant_images",my_plant_images);
@@ -342,6 +346,8 @@ public class PlnatCarmer extends AppCompatActivity {
                             //startActivity(intent);
                         }
                     });
+
+
 
                 }else{
                     int StatusCode =response.code();
@@ -386,8 +392,8 @@ public class PlnatCarmer extends AppCompatActivity {
         mMyAPI = retrofit.create(MyAPI.class);
 
 
-        Intent intent = new Intent(getApplicationContext(), Loading.class);
-        startActivity(intent); //로딩화면 출력
+//        Intent intentL = new Intent(getApplicationContext(), Loading.class);
+//        startActivity(intentL); //로딩화면 출력
 
         Call<AccountItem> call = mMyAPI.upload(images,""+android_id,""+formatDate);
         call.enqueue(new Callback<AccountItem>() {

@@ -2,6 +2,7 @@ package com.example.plnatsub;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ public class Loading extends AppCompatActivity {
         startLoading();
     }
 
+
     private void startLoading() {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -25,6 +27,6 @@ public class Loading extends AppCompatActivity {
             public void run() {
                 finish();
             }
-        }, 10000);
+        }, 4000);
     }
 }

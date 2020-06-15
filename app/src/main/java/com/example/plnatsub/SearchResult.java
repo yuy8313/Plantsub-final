@@ -27,7 +27,7 @@ public class SearchResult extends AppCompatActivity {
 
     private final  String TAG = getClass().getSimpleName();
 
-    private final String BASE_URL = "http://ac6dc08d6af5.ngrok.io"; //url주소
+    private final String BASE_URL = "http://655bd3efc4ec.ngrok.io"; //url주소
     Button first_detail_btn,second_detail_btn;
     ImageView flower_img1, flower_img2, flower_img3;
     private String android_id;
@@ -100,7 +100,7 @@ public class SearchResult extends AppCompatActivity {
                                 name_txt +=""+ accountItem.getName();
                                 flower_txt +=" 꽃말: "+accountItem.getFlower();
                                 content_txt +=" 꽃 내용: "+accountItem.getContent();
-                                img_txt ="http://ac6dc08d6af5.ngrok.io"+accountItem.getImage();  //url주소
+                                img_txt ="http://655bd3efc4ec.ngrok.io"+accountItem.getImage();  //url주소
 
                             }
 
@@ -150,7 +150,7 @@ public class SearchResult extends AppCompatActivity {
 //
                                 name_txt +=""+ accountItem.getName();
                                 flower_txt +=" 꽃말: "+accountItem.getFlower();
-                                img_txt ="http://ac6dc08d6af5.ngrok.io"+accountItem.getImage();   //url주소
+                                img_txt ="http://655bd3efc4ec.ngrok.io"+accountItem.getImage();   //url주소
                                 content_txt +=" 꽃 내용: "+accountItem.getContent();
 //
                             }

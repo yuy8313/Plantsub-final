@@ -1,14 +1,17 @@
 package com.example.plnatsub;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,137 +19,134 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import  com.example.plnatsub.MyRecyclerAdapter;
+import com.squareup.picasso.Target;
 
-public class PlantBook  extends AppCompatActivity {
+public class PlantBook  extends AppCompatActivity implements MyRecyclerAdapter.MyRecyclerViewClickListener {
 
-    private final String BASE_URL = "http://ac6dc08d6af5.ngrok.io"; //url 주소
-
-
+    private final String BASE_URL = "http://655bd3efc4ec.ngrok.io"; //url 주소
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private MyRecyclerAdapter mAdapter;
     private MyAPI mMyAPI;
-    private final  String TAG = getClass().getSimpleName();
-
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.plant_book);
+        setContentView(R.layout.plant_book_recycle);
 
-//        final TextView book_txt = (TextView) findViewById(R.id.book_txt);
-//        final ImageView book_image = (ImageView) findViewById(R.id.book_image);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_book);
 
+        recyclerView.setHasFixedSize(false);
 
-
-
+        // 레이아웃 매니저로 LinearLayoutManager를 설정
+        //  LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+//        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
         initMyAPI(BASE_URL);
-        final String android_id = android.provider.Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        String android_id = android.provider.Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        Call<List<AccountItem>> versionCall = mMyAPI.get_book_list(""+android_id);
+        Intent intentL = new Intent(getApplicationContext(), Loading.class);
+        startActivity(intentL); //로딩화면 출력
+
+        // 표시할 임시 데이터
+        final List<CardItem> dataList = new ArrayList<>();
+        Call<List<AccountItem>> versionCall = mMyAPI.get_book_list("" + android_id);
         versionCall.enqueue(new Callback<List<AccountItem>>() {
             @Override
             public void onResponse(Call<List<AccountItem>> call, Response<List<AccountItem>> response) {
-                if(response.isSuccessful()){
-                    List<AccountItem> versionList =response.body();
-                    Log.d(TAG,response.body().toString());
+                if (response.isSuccessful()) {
+                    List<AccountItem> versionList = response.body();
+                    Log.d(TAG, response.body().toString());
                     String book_list_text = "";
                     String book_list_image = "";
 
                     String book_text_one = "";
                     String book_image_one = "";
+                    for (AccountItem accountItem : versionList) {
 
-                    String book_number_one = "";
-                    for(AccountItem accountItem:versionList){
-                        LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
-//                        book_list_text +=""+accountItem.getName()+""+accountItem.getFlower()+""+accountItem.getContent()+"\n\n";
+                        book_text_one = "" + accountItem.getName();//1번째 이름
+                        book_image_one = accountItem.getImage();//1번째 이미지
 
-                        book_text_one = ""+accountItem.getName();
-                        TextView tv_one = new TextView(getApplicationContext());
-                        tv_one.setText(book_text_one);          // 첫번째 꽃저장 이름
-                        layout.addView(tv_one);
+                        final String finalBook_image_one = book_image_one;
+                        Thread uThread = new Thread() {
 
-
-                        book_list_text += accountItem.getName()+"\n";
-
-                        String book_text_last = book_list_text.substring(book_list_text.lastIndexOf("\n"));
-                        TextView tv_last = new TextView(getApplicationContext());
-                        tv_last.setText(book_text_last);
-                        layout.addView(tv_last);
-
-
-                        book_image_one = accountItem.getImage();
-                        ImageView iv_one = new ImageView(getApplicationContext());
-                        Picasso.get().load(book_image_one).into(iv_one);  // 첫번째 이미지
-                        layout.addView(iv_one);
-
-                        book_list_image += accountItem.getImage()+"@";
-
-                        String book_image_last = book_list_image.substring(book_list_image.lastIndexOf("@"));
-                        ImageView iv_last = new ImageView(getApplicationContext());
-                        Picasso.get().load(book_image_last).into(iv_last);  // 2번째 부터 이미지
-
-                        book_number_one = ""+accountItem.getId();
-                        Button btn_one = new Button(getApplicationContext());
-                        btn_one.setText("자세히 보기");
-                        layout.addView(btn_one);
-
-                        final String finalBook_number_one = book_number_one;
-                        btn_one.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View view) {
-                                final Intent intent = new Intent(getApplicationContext(), PlantBookDetail.class);
-                                Call<List<AccountItem>> mydatailCall = mMyAPI.get_my_book_detail(android_id, finalBook_number_one);
-                                mydatailCall.enqueue(new Callback<List<AccountItem>>() {
-                                    @Override
-                                    public void onResponse(Call<List<AccountItem>> call, Response<List<AccountItem>> response) {
-                                        if (response.isSuccessful()) {
-                                            List<AccountItem> versionList =response.body();
-                                            String first_img_detail_txt = "";
-                                            String first_name_datail_txt = "";
-                                            String first_flower_detail_txt = "";
-                                            String first_content_detail_txt = "";
-                                            for(AccountItem accountItem:versionList){
-                                                Log.d(TAG,"ㅎ"+accountItem.getName());
+                            public void run() {
+                                try {
+                                    //서버에 올려둔 이미지 URL
+                                    URL url = new URL(finalBook_image_one);
+                                    //Web에서 이미지 가져온 후 ImageView에 지정할 Bitmap 만들기
+                    /* URLConnection 생성자가 protected로 선언되어 있으므로
+                     개발자가 직접 HttpURLConnection 객체 생성 불가 */
 
-                                                first_img_detail_txt =""+accountItem.getImage();
-                                                first_name_datail_txt = ""+accountItem.getName();
-                                                first_flower_detail_txt = ""+accountItem.getFlower();
-                                                first_content_detail_txt = ""+accountItem.getContent();
-                                                Log.d(TAG,"뭐냐"+first_flower_detail_txt);
-                                                Log.d(TAG,"뭐냐 이미지"+first_img_detail_txt);
-                                            }
-                                            intent.putExtra("first_img_detail_txt",first_img_detail_txt);
-                                            intent.putExtra("first_name_datail_txt",first_name_datail_txt);
-                                            intent.putExtra("first_flower_detail_txt",first_flower_detail_txt);
-                                            intent.putExtra("first_content_detail_txt",first_content_detail_txt);
+                                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    /* openConnection()메서드가 리턴하는 urlConnection 객체는
+                    HttpURLConnection의 인스턴스가 될 수 있으므로 캐스팅해서 사용한다*/
 
-                                            startActivity(intent);
-                                        } else {
-                                            int StatusCode = response.code();
-                                            Log.d(TAG, "dd아" + StatusCode);
-                                        }
-                                    }
+                                    conn.setDoInput(true); //Server 통신에서 입력 가능한 상태로 만듦
+                                    conn.connect(); //연결된 곳에 접속할 때 (connect() 호출해야 실제 통신 가능함)
+                                    InputStream is = conn.getInputStream(); //inputStream 값 가져오기
+                                    bitmap = BitmapFactory.decodeStream(is); // Bitmap으로 반환
 
-                                    @Override
-                                    public void onFailure(Call<List<AccountItem>> call, Throwable t) {
-                                        Log.d(TAG, "실패" + t.getMessage());
-                                    }
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
 
-                                });
                             }
-                        });
-                        layout.addView(iv_last);
-                    }
 
-                }else{
-                    int StatusCode =response.code();
-                    Log.d(TAG,"dd아"+StatusCode);
+                        };
+                        uThread.start(); // 작업 Thread 실행
+
+                        try {
+                            //메인 Thread는 별도의 작업을 완료할 때까지 대기한다!
+                            //join() 호출하여 별도의 작업 Thread가 종료될 때까지 메인 Thread가 기다림
+                            //join() 메서드는 InterruptedException을 발생시킨다.
+                            uThread.join();
+
+                            //작업 Thread에서 이미지를 불러오는 작업을 완료한 뒤
+                            //UI 작업을 할 수 있는 메인 Thread에서 ImageView에 이미지 지정
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+
+                        }
+                        // 어댑터 설정
+                        dataList.add(new CardItem(bitmap, book_text_one));
+                        mAdapter = new MyRecyclerAdapter(dataList);
+                        //mAdapter.setOnClickListener((MyRecyclerAdapter.MyRecyclerViewClickListener) getApplicationContext());
+                        recyclerView.setAdapter(mAdapter);
+                    }
+                } else {
+                    int StatusCode = response.code();
+                    Log.d(TAG, "dd아" + StatusCode);
                 }
             }
 
@@ -155,12 +155,29 @@ public class PlantBook  extends AppCompatActivity {
 
             }
         });
+
+
+        // ItemAnimator
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setAddDuration(1000);
+        animator.setRemoveDuration(1000);
+        animator.setMoveDuration(1000);
+        animator.setChangeDuration(1000);
+        recyclerView.setItemAnimator(animator);
+
+        // ItemDecoration
+        DividerItemDecoration decoration = new DividerItemDecoration(this, layoutManager.getOrientation());
+        recyclerView.addItemDecoration(decoration);
     }
 
+    public void onBackPressed() {  //뒤로가기 버튼 이벤트
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        super.onBackPressed();
+    }
 
-    public void initMyAPI(String baseUrl){
-
-        Log.d(TAG,"initMyAPI : " + baseUrl);
+    private void initMyAPI(String baseUrl) {
+        Log.d(TAG, "initMyAPI : " + baseUrl);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -169,4 +186,36 @@ public class PlantBook  extends AppCompatActivity {
 
         mMyAPI = retrofit.create(MyAPI.class);
     }
+
+    @Override
+    public void onItemClicked(int position) {
+        Log.d(TAG, "onItemClicked: " + position);
+    }
+
+    @Override
+    public void onShareButtonClicked(int position) {
+        Log.d(TAG, "onShareButtonClicked: " + position);
+
+        mAdapter.addItem(position, new CardItem(bitmap, "추가 됨"));
+    }
+
+    @Override
+    public void onLearnMoreButtonClicked(int position) {
+        Log.d(TAG, "onLearnMoreButtonClicked: " + position);
+
+        // 아이템 삭제
+        mAdapter.removeItem(position);
+    }
+
+//    public static Bitmap getImageFromURL(final String imageURL) {
+//
+//    }
 }
+
+
+
+
+
+
+
+

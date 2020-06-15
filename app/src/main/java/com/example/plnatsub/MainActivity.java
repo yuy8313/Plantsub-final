@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     String mCurrentPhotoPath;
     String formatDate, android_id;
     // server의 url을 적어준다
-    private final String BASE_URL = "http://ac6dc08d6af5.ngrok.io";  //url주소
+    private final String BASE_URL = "http://655bd3efc4ec.ngrok.io";  //url주소
 //    private final String BASE_URL = "http://127.0.0.1:5000/";
 
     @Override
@@ -105,8 +105,13 @@ public class MainActivity extends AppCompatActivity {
         main_btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(getApplicationContext(), PlantBook.class);
                 startActivity(intent);
+
+//                Intent intentL = new Intent(getApplicationContext(), Loading.class);
+//                startActivity(intentL); //로딩화면 출력
+
             }
         });
         initMyAPI(BASE_URL);
@@ -298,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
                         second_txt += accountItem.getSecond_name();
                         second_percent_txt += "일치율:"+accountItem.getSecond_percent();
 
-                        my_images += "http://ac6dc08d6af5.ngrok.io"+accountItem.getImages();  //url주소
+                        my_images += "http://655bd3efc4ec.ngrok.io"+accountItem.getImages();  //url주소
                     }
                     final String one = first_txt;
                     final String two = second_txt;
@@ -331,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d(TAG,"ㅅ"+one);
                                     Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                    first_img_txt ="http://ac6dc08d6af5.ngrok.io"+accountItem.getImage();  //url주소
+                                    first_img_txt ="http://655bd3efc4ec.ngrok.io"+accountItem.getImage();  //url주소
 
                                 }
                                 intent.putExtra("my_plant_images",my_plant_images);
@@ -363,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d(TAG,"ㅅ"+two);
                                     Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                    second_img_txt ="http://ac6dc08d6af5.ngrok.io"+accountItem.getImage();  //url주소
+                                    second_img_txt ="http://655bd3efc4ec.ngrok.io"+accountItem.getImage();  //url주소
 
                                 }
                                 intent.putExtra("my_plant_images",my_plant_images);
