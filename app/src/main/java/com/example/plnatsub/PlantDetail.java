@@ -107,6 +107,12 @@ public class PlantDetail extends AppCompatActivity {
         });
     }
 
+    public void onBackPressed() {  //뒤로가기 버튼 이벤트
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        super.onBackPressed();
+    }
+
     public void initMyAPI(String baseUrl){
 
         Log.d(TAG,"initMyAPI : " + baseUrl);

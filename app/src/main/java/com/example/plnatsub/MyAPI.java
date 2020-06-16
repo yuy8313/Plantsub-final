@@ -41,6 +41,11 @@ public interface MyAPI{
     @DELETE("/account/{pk}/")
     Call<AccountItem> delete_accounts(@Path("pk") int pk);
 
+    @DELETE("/my_book_delete/{id}/")
+    Call<AccountItem> delete_book_list(@Path("id") String id);
+
+
+
 //    @GET("/plant/")
 //    Call<List<AccountItem>> get_accounts(@Query("price") String price);
 
@@ -59,5 +64,7 @@ public interface MyAPI{
 
     @GET("/my_book_detail/{device}/{id}")
     Call<List<AccountItem>> get_my_book_detail(@Path("device") String device, @Path("id") String id);
+
+
 
 }

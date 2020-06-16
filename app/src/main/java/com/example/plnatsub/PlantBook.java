@@ -46,9 +46,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import  com.example.plnatsub.MyRecyclerAdapter;
 import com.squareup.picasso.Target;
 
-public class PlantBook  extends AppCompatActivity implements MyRecyclerAdapter.MyRecyclerViewClickListener {
+public class PlantBook  extends AppCompatActivity  {
 
-    private final String BASE_URL = "http://655bd3efc4ec.ngrok.io"; //url 주소
+    private final String BASE_URL = "http://655bd3efc4ec.ngrok.io";
     private static final String TAG = MainActivity.class.getSimpleName();
     private MyRecyclerAdapter mAdapter;
     private MyAPI mMyAPI;
@@ -69,10 +69,11 @@ public class PlantBook  extends AppCompatActivity implements MyRecyclerAdapter.M
 //        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         initMyAPI(BASE_URL);
-        String android_id = android.provider.Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        final String android_id = android.provider.Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         Intent intentL = new Intent(getApplicationContext(), Loading.class);
         startActivity(intentL); //로딩화면 출력
+
 
         // 표시할 임시 데이터
         final List<CardItem> dataList = new ArrayList<>();
@@ -93,6 +94,10 @@ public class PlantBook  extends AppCompatActivity implements MyRecyclerAdapter.M
                         book_text_one = "" + accountItem.getName();//1번째 이름
                         book_image_one = accountItem.getImage();//1번째 이미지
 
+                        String book_number_one= accountItem.getId();
+                        Log.d(TAG,"번호악"+book_number_one);
+                        Log.d(TAG,"번호악111"+book_text_one);
+                        final String finalBook_number_one = book_number_one;
                         final String finalBook_image_one = book_image_one;
                         Thread uThread = new Thread() {
 
@@ -141,7 +146,85 @@ public class PlantBook  extends AppCompatActivity implements MyRecyclerAdapter.M
                         // 어댑터 설정
                         dataList.add(new CardItem(bitmap, book_text_one));
                         mAdapter = new MyRecyclerAdapter(dataList);
-                        //mAdapter.setOnClickListener((MyRecyclerAdapter.MyRecyclerViewClickListener) getApplicationContext());
+                        mAdapter.setOnClickListener(new MyRecyclerAdapter.MyRecyclerViewClickListener() {
+                            @Override
+                            public void onItemClicked(int position) {
+                                Log.d(TAG, "onItemClicked: " + position);
+
+
+                                final Intent intent = new Intent(getApplicationContext(), PlantBookDetail.class);
+                                Call<List<AccountItem>> mydatailCall = mMyAPI.get_my_book_detail(android_id, finalBook_number_one);
+                                mydatailCall.enqueue(new Callback<List<AccountItem>>() {
+                                    @Override
+                                    public void onResponse(Call<List<AccountItem>> call, Response<List<AccountItem>> response) {
+                                        if (response.isSuccessful()) {
+                                            Log.d(TAG,"번호"+finalBook_number_one);
+                                            List<AccountItem> versionList =response.body();
+                                            String first_img_detail_txt = "";
+                                            String first_name_datail_txt = "";
+                                            String first_flower_detail_txt = "";
+                                            String first_content_detail_txt = "";
+                                            for(AccountItem accountItem:versionList){
+                                                Log.d(TAG,"ㅎ"+accountItem.getName());
+
+                                                first_img_detail_txt =""+accountItem.getImage();
+                                                first_name_datail_txt = ""+accountItem.getName();
+                                                first_flower_detail_txt = ""+accountItem.getFlower();
+                                                first_content_detail_txt = ""+accountItem.getContent();
+                                                Log.d(TAG,"뭐냐"+first_flower_detail_txt);
+                                                Log.d(TAG,"뭐냐 이미지"+first_img_detail_txt);
+                                            }
+                                            intent.putExtra("first_img_detail_txt",first_img_detail_txt);
+                                            intent.putExtra("first_name_datail_txt",first_name_datail_txt);
+                                            intent.putExtra("first_flower_detail_txt",first_flower_detail_txt);
+                                            intent.putExtra("first_content_detail_txt",first_content_detail_txt);
+
+                                            startActivity(intent);
+                                        } else {
+                                            int StatusCode = response.code();
+                                            Log.d(TAG, "dd아" + StatusCode);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<List<AccountItem>> call, Throwable t) {
+                                        Log.d(TAG, "실패" + t.getMessage());
+                                    }
+
+                                });
+
+                            }
+
+
+                            @Override
+                            public void onLearnMoreButtonClicked(int position) {   //삭제 버튼
+                                Log.d(TAG, "onLearnMoreButtonClicked: " + position);
+
+                                Call<AccountItem> mydeleteCall = mMyAPI.delete_book_list(finalBook_number_one);
+                                mydeleteCall.enqueue(new Callback<AccountItem>() {
+                                    @Override
+                                    public void onResponse(Call<AccountItem> call, Response<AccountItem> response) {
+                                        if (response.isSuccessful()) {
+                                            AccountItem versionList =response.body();
+                                            Log.d(TAG, "dd마마마ㅏㅏ아" + versionList);
+
+                                        } else {
+                                            int StatusCode = response.code();
+                                            Log.d(TAG, "dd아" + StatusCode);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<AccountItem> call, Throwable t) {
+                                        Log.d(TAG, "실패" + t.getMessage());
+                                    }
+
+                                });
+                                // 아이템 삭제
+                                mAdapter.removeItem(position);
+
+                            }
+                        });
                         recyclerView.setAdapter(mAdapter);
                     }
                 } else {
@@ -187,25 +270,7 @@ public class PlantBook  extends AppCompatActivity implements MyRecyclerAdapter.M
         mMyAPI = retrofit.create(MyAPI.class);
     }
 
-    @Override
-    public void onItemClicked(int position) {
-        Log.d(TAG, "onItemClicked: " + position);
-    }
 
-    @Override
-    public void onShareButtonClicked(int position) {
-        Log.d(TAG, "onShareButtonClicked: " + position);
-
-        mAdapter.addItem(position, new CardItem(bitmap, "추가 됨"));
-    }
-
-    @Override
-    public void onLearnMoreButtonClicked(int position) {
-        Log.d(TAG, "onLearnMoreButtonClicked: " + position);
-
-        // 아이템 삭제
-        mAdapter.removeItem(position);
-    }
 
 //    public static Bitmap getImageFromURL(final String imageURL) {
 //

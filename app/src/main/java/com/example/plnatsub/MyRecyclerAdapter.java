@@ -47,12 +47,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
                     mListener.onItemClicked(holder.getAdapterPosition());
                 }
             });
-            holder.share.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mListener.onShareButtonClicked(holder.getAdapterPosition());
-                }
-            });
+
             holder.more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -84,8 +79,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
             super(itemView);
             contents = (TextView) itemView.findViewById(R.id.contents_txt);
             image = (ImageView) itemView.findViewById(R.id.book_image);
-            share = (Button) itemView.findViewById(R.id.info_button);
-            more = (Button) itemView.findViewById(R.id.del_button);
+            more = (Button) itemView.findViewById(R.id.btn_delete);
 
         }
     }
@@ -98,9 +92,6 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
         // 아이템 전체 부분의 클릭
         void onItemClicked(int position);
 
-        // Share 버튼 클릭
-        void onShareButtonClicked(int position);
-
         // Learn More 버튼 클릭
         void onLearnMoreButtonClicked(int position);
     }
@@ -109,6 +100,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
         mDataList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mDataList.size());
+
     }
 
     public void addItem(int position, CardItem item) {

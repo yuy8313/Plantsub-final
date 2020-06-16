@@ -28,24 +28,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/maplestory_bold"
-            android:padding="25dp"/>
+            android:padding="10dp"
+            android:textSize="25dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/info_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:fontFamily="@font/maplestory_light"
-                android:background="#00ffffff"
-                android:text="LEARN MORE"/>
 
             <Button
-                android:id="@+id/del_button"
+                android:id="@+id/btn_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/maplestory_light"
