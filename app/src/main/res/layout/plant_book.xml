@@ -1,50 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="8dp">
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="#FBD2E4"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/layout"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#FEEDF5">
-
-        <ImageView
-            android:id="@+id/book_image"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:scaleType="centerCrop" />
-
-
-
-        <TextView
-            android:id="@+id/contents_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/maplestory_bold"
-            android:padding="10dp"
-            android:textSize="25dp"/>
+        android:orientation="horizontal"
+        android:id="@+id/scrollView">
+        <!--        android:gravity ="center"-->
+        <!--        android:fillViewport="true"-->
+        <!--        android:layout_marginTop="0dp">-->
 
         <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent">
 
-
-            <Button
-                android:id="@+id/btn_delete"
+            <GridLayout
+                android:id="@+id/gridlayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/maplestory_light"
-                android:background="#00ffffff"
-                android:text="delete" />
+                android:rowCount="2"
+                android:orientation="horizontal"/>
+            <!--            <ImageView-->
+            <!--                android:id="@+id/book_image"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:layout_weight="3"/>-->
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/book_txt"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:layout_weight="3"-->
+            <!--                android:textSize="15sp" />-->
+
         </LinearLayout>
 
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+    </ScrollView>
+</LinearLayout>

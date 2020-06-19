@@ -14,7 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlantBookDetail extends AppCompatActivity {
-    private final String BASE_URL = "http://655bd3efc4ec.ngrok.io";
+    private final String BASE_URL = "http://20bba75e5a04.ngrok.io";
 
 
     private MyAPI mMyAPI;

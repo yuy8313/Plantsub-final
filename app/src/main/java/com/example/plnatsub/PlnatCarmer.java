@@ -62,7 +62,7 @@ public class PlnatCarmer extends AppCompatActivity {
     private MyAPI mMyAPI;
     private final  String TAG = getClass().getSimpleName();
     // server의 url을 적어준다
-    private final String BASE_URL = "http://655bd3efc4ec.ngrok.io";  //url주소
+    private final String BASE_URL = "http://20bba75e5a04.ngrok.io";  //url주소
     //    private final String BASE_URL = "http://127.0.0.1:5000/";
     Boolean album = false;
     private static final int REQUEST_IMAGE_CAPTURE = 672;
@@ -247,11 +247,11 @@ public class PlnatCarmer extends AppCompatActivity {
 
                     for(AccountItem accountItem:versionList){
                         first_txt += accountItem.getFirst_name();
-                        first_percent_txt += "일치율: "+accountItem.getFirst_percent();
+                        first_percent_txt += "일치율: "+accountItem.getFirst_percent()+"%";
                         second_txt += accountItem.getSecond_name();
-                        second_percent_txt += "일치율: "+accountItem.getSecond_percent();
+                        second_percent_txt += "일치율: "+accountItem.getSecond_percent()+"%";
 
-                        my_images += "http://655bd3efc4ec.ngrok.io"+accountItem.getImages();  //url 주소
+                        my_images += "http://20bba75e5a04.ngrok.io"+accountItem.getImages();  //url 주소
                     }
                     final String one = first_txt;
                     final String two = second_txt;
@@ -291,7 +291,7 @@ public class PlnatCarmer extends AppCompatActivity {
                                             Log.d(TAG,"ㅅ"+one);
                                             Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                             first_img_txt ="http://655bd3efc4ec.ngrok.io"+accountItem.getImage();  //url주소
+                                             first_img_txt ="http://20bba75e5a04.ngrok.io"+accountItem.getImage();  //url주소
 
                                         }
                                         intent.putExtra("my_plant_images",my_plant_images);
@@ -323,7 +323,7 @@ public class PlnatCarmer extends AppCompatActivity {
                                             Log.d(TAG,"ㅅ"+two);
                                             Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                            second_img_txt ="http://655bd3efc4ec.ngrok.io"+accountItem.getImage();  //url주소
+                                            second_img_txt ="http://20bba75e5a04.ngrok.io"+accountItem.getImage();  //url주소
 
                                         }
                                         intent.putExtra("my_plant_images",my_plant_images);
