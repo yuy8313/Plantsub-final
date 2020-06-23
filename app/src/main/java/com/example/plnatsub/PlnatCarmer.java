@@ -1,9 +1,5 @@
 package com.example.plnatsub;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,45 +8,31 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
-import android.telephony.mbms.FileInfo;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
-import com.squareup.picasso.Picasso;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -62,7 +44,7 @@ public class PlnatCarmer extends AppCompatActivity {
     private MyAPI mMyAPI;
     private final  String TAG = getClass().getSimpleName();
     // server의 url을 적어준다
-    private final String BASE_URL = "http://20bba75e5a04.ngrok.io";  //url주소
+    private final String BASE_URL = "http://36c5fcc3ab6e.ngrok.io";  //url주소
     //    private final String BASE_URL = "http://127.0.0.1:5000/";
     Boolean album = false;
     private static final int REQUEST_IMAGE_CAPTURE = 672;
@@ -91,7 +73,7 @@ public class PlnatCarmer extends AppCompatActivity {
             SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy.MM.ddHH.mm.ss");
             formatDate = sdfNow.format(date);
 
-            android_id = android.provider.Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
             try {
                 photoFile = createImageFile();
@@ -120,7 +102,7 @@ public class PlnatCarmer extends AppCompatActivity {
                     SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy.MM.ddHH.mm.ss");
                     formatDate = sdfNow.format(date);
 
-                    android_id = android.provider.Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                    android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
                     try {
                         photoFile = createImageFile();
@@ -242,19 +224,25 @@ public class PlnatCarmer extends AppCompatActivity {
                     String first_percent_txt = "";
                     String second_txt = "";
                     String second_percent_txt = "";
+                    String third_txt = "";
+                    String third_percent_txt = "";
+
 
                     String my_images = "";
 
                     for(AccountItem accountItem:versionList){
                         first_txt += accountItem.getFirst_name();
-                        first_percent_txt += "일치율: "+accountItem.getFirst_percent()+"%";
+                        first_percent_txt += accountItem.getFirst_percent();
                         second_txt += accountItem.getSecond_name();
-                        second_percent_txt += "일치율: "+accountItem.getSecond_percent()+"%";
+                        second_percent_txt += accountItem.getSecond_percent();
+                        third_txt += accountItem.getThird_name();
+                        third_percent_txt += accountItem.getThird_percent();
 
-                        my_images += "http://20bba75e5a04.ngrok.io"+accountItem.getImages();  //url 주소
+                        my_images += ""+BASE_URL+accountItem.getImages();  //url 주소
                     }
                     final String one = first_txt;
                     final String two = second_txt;
+                    final String three = third_txt;
 
                     final String my_plant_images = my_images;
 
@@ -268,6 +256,9 @@ public class PlnatCarmer extends AppCompatActivity {
 
                     intent.putExtra("second_txt",second_txt);
                     intent.putExtra("second_percent_txt",second_percent_txt);
+
+                    intent.putExtra("third_txt",third_txt);
+                    intent.putExtra("third_percent_txt",third_percent_txt);
 
                     intent.putExtra("android_id", android_id);
                     intent.putExtra("formatDate", formatDate);
@@ -291,7 +282,7 @@ public class PlnatCarmer extends AppCompatActivity {
                                             Log.d(TAG,"ㅅ"+one);
                                             Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                             first_img_txt ="http://20bba75e5a04.ngrok.io"+accountItem.getImage();  //url주소
+                                             first_img_txt =""+BASE_URL+accountItem.getImage();  //url주소
 
                                         }
                                         intent.putExtra("my_plant_images",my_plant_images);
@@ -323,11 +314,42 @@ public class PlnatCarmer extends AppCompatActivity {
                                             Log.d(TAG,"ㅅ"+two);
                                             Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                            second_img_txt ="http://20bba75e5a04.ngrok.io"+accountItem.getImage();  //url주소
+                                            second_img_txt =""+BASE_URL+accountItem.getImage();  //url주소
 
                                         }
                                         intent.putExtra("my_plant_images",my_plant_images);
                                         intent.putExtra("second_img_txt",second_img_txt);
+
+//                                        startActivity(intent);
+                                    } else {
+                                        int StatusCode = response.code();
+                                        Log.d(TAG, "dd아" + StatusCode);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<AccountItem>> call, Throwable t) {
+                                    Log.d(TAG, "실패" + t.getMessage());
+                                }
+
+                            });
+                            Call<List<AccountItem>> plantconCall2 = mMyAPI.get_plant_con(three);
+                            plantconCall2.enqueue(new Callback<List<AccountItem>>() {
+                                @Override
+                                public void onResponse(Call<List<AccountItem>> call, Response<List<AccountItem>> response) {
+                                    if (response.isSuccessful()) {
+                                        List<AccountItem> versionList =response.body();
+                                        String third_img_txt = "";
+
+                                        for(AccountItem accountItem:versionList){
+                                            Log.d(TAG,"삼"+three);
+                                            Log.d(TAG,"셋"+accountItem.getName());
+
+                                            third_img_txt =""+BASE_URL+accountItem.getImage();  //url주소
+
+                                        }
+                                        intent.putExtra("my_plant_images",my_plant_images);
+                                        intent.putExtra("third_img_txt",third_img_txt);
 
                                         startActivity(intent);
                                     } else {
@@ -342,7 +364,6 @@ public class PlnatCarmer extends AppCompatActivity {
                                 }
 
                             });
-
                             //startActivity(intent);
                         }
                     });

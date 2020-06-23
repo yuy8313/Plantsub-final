@@ -2,24 +2,19 @@ package com.example.plnatsub;
 
 
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.PartMap;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface MyAPI{
 
@@ -29,11 +24,11 @@ public interface MyAPI{
 
     @FormUrlEncoded
     @POST("/book_post/")
-    Call<AccountItem> book_posts(@Field("device") String device,@Field("name") String name, @Field("flower") String flower, @Field("content") String content, @Field("image") String image);
+    Call<AccountItem> book_posts(@Field("device") String device, @Field("name") String name, @Field("flower") String flower, @Field("content") String content, @Field("image") String image);
 
     @FormUrlEncoded
     @POST("/test/")
-    Call<AccountItem> post(@Field("avg_temp") float avg_temp,@Field("min_temp") float min_temp,@Field("max_temp") float max_temp,@Field("rain_fall") float rain_fall);
+    Call<AccountItem> post(@Field("avg_temp") float avg_temp, @Field("min_temp") float min_temp, @Field("max_temp") float max_temp, @Field("rain_fall") float rain_fall);
 
     @PATCH("/account/{pk}/")
     Call<AccountItem> patch_accounts(@Path("pk") int pk, @Body AccountItem account);

@@ -1,10 +1,7 @@
 package com.example.plnatsub;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.ColorSpace;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -19,13 +16,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterInside;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,7 +32,7 @@ import static com.example.plnatsub.R.drawable.btn_carmer;
 
 public class PlantBook  extends AppCompatActivity {
 
-    private final String BASE_URL = "http://20bba75e5a04.ngrok.io"; //주소
+    private final String BASE_URL = "http://36c5fcc3ab6e.ngrok.io"; //주소
 
 
     private MyAPI mMyAPI;
@@ -55,7 +51,7 @@ public class PlantBook  extends AppCompatActivity {
 
 
         initMyAPI(BASE_URL);
-        final String android_id = android.provider.Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        final String android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         Call<List<AccountItem>> versionCall = mMyAPI.get_book_list(""+android_id);
         versionCall.enqueue(new Callback<List<AccountItem>>() {

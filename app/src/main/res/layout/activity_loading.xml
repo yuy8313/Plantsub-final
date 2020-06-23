@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="550dp"
-        android:background="@drawable/loading_img" />
+        android:background="@drawable/loading_new_img" />
 
     <ProgressBar
         android:id="@+id/progressBar"

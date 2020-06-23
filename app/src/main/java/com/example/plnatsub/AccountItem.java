@@ -1,7 +1,5 @@
 package com.example.plnatsub;
 
-import com.google.gson.annotations.SerializedName;
-
 public class AccountItem {
     String success;
     String image;
@@ -14,6 +12,9 @@ public class AccountItem {
     String first_name;
     String first_percent;
     String second_name;
+    String second_percent;
+    String third_name;
+    String third_percent;
 
     String name;
     String flower;
@@ -21,6 +22,22 @@ public class AccountItem {
     String images;
 
     String id;
+
+    public String getThird_name() {
+        return third_name;
+    }
+
+    public void setThird_name(String third_name) {
+        this.third_name = third_name;
+    }
+
+    public String getThird_percent() {
+        return third_percent;
+    }
+
+    public void setThird_percent(String third_percent) {
+        this.third_percent = third_percent;
+    }
 
     public String getId() {
         return id;
@@ -77,7 +94,6 @@ public class AccountItem {
         this.second_percent = second_percent;
     }
 
-    String second_percent;
 
     public String getFirst_name() {
         return first_name;

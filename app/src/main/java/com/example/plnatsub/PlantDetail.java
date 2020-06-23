@@ -16,8 +16,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlantDetail extends AppCompatActivity {
 
-    private final String BASE_URL = "http://20bba75e5a04.ngrok.io";  //url주소
+    private final String BASE_URL = "http://36c5fcc3ab6e.ngrok.io";  //url주소
 
     private MyAPI mMyAPI;
     private final  String TAG = getClass().getSimpleName();
@@ -60,7 +58,7 @@ public class PlantDetail extends AppCompatActivity {
         flower_content.setText(plant_content);
         initMyAPI(BASE_URL);
 
-        final String android_id = android.provider.Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        final String android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         addGallery.setOnClickListener(new View.OnClickListener() {
             @Override

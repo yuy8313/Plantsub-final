@@ -14,7 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlantBookDetail extends AppCompatActivity {
-    private final String BASE_URL = "http://20bba75e5a04.ngrok.io";
+    private final String BASE_URL = "http://36c5fcc3ab6e.ngrok.io";
 
 
     private MyAPI mMyAPI;
@@ -47,7 +47,7 @@ public class PlantBookDetail extends AppCompatActivity {
     }
 
     public void onBackPressed() {  //뒤로가기 버튼 이벤트
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PlantBook.class);
         startActivity(intent);
         super.onBackPressed();
     }

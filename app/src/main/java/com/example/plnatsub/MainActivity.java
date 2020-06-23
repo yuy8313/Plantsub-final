@@ -1,18 +1,6 @@
 package com.example.plnatsub;
 
-import androidx.appcompat.app.AppCompatActivity;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -26,27 +14,33 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.plnatsub.util.ImageResizeUtils;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.soundcloud.android.crop.Crop;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,8 +57,13 @@ public class MainActivity extends AppCompatActivity {
     String mCurrentPhotoPath;
     String formatDate, android_id;
     // server의 url을 적어준다
-    private final String BASE_URL = "http://20bba75e5a04.ngrok.io";  //url주소
+    private final String BASE_URL = "http://36c5fcc3ab6e.ngrok.io";  //url주소
 //    private final String BASE_URL = "http://127.0.0.1:5000/";
+
+    // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
+    private long backKeyPressedTime = 0;
+    // 첫 번째 뒤로가기 버튼을 누를때 표시
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-                intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, PICK_FROM_ALBUM);
             }
         });
@@ -116,6 +115,39 @@ public class MainActivity extends AppCompatActivity {
         });
         initMyAPI(BASE_URL);
     }
+
+    @Override
+    public void onBackPressed() {
+        // 기존 뒤로가기 버튼의 기능을 막기위해 주석처리 또는 삭제
+        // super.onBackPressed();
+
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지났으면 Toast Show
+        // 2000 milliseconds = 2 seconds
+        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+            backKeyPressedTime = System.currentTimeMillis();
+            toast = Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지나지 않았으면 종료
+        // 현재 표시된 Toast 취소
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            AppFinish();
+            toast.cancel();
+        }
+    }
+
+    //앱종료
+    public void AppFinish(){
+//        moveTaskToBack(true);
+//        finishAndRemoveTask();
+//        android.os.Process.killProcess(android.os.Process.myPid());
+        ActivityCompat.finishAffinity(this);
+    }
+
+
 
     PermissionListener permissionListener = new PermissionListener() {
         @Override
@@ -156,6 +188,9 @@ public class MainActivity extends AppCompatActivity {
                     //gallery_img.setImageBitmap(photo); // 사진나옴
                     Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 
+                    Intent intent = new Intent(getApplicationContext(), Loading.class);
+                    startActivity(intent); //로딩화면 출력
+
                     if(album == false){
                         mediaScanIntent.setData(photoURI);
                     }else if(album == true){
@@ -164,7 +199,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Log.d(TAG,"ㅇㅇㅇㅅㅂㅈㄱㅇ : " + mediaScanIntent.setData(photoURI));
                     this.sendBroadcast(mediaScanIntent);
+
                     ImageUpdate();
+
                     break;
             }
         }
@@ -229,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy.MM.ddHH.mm.ss");
         formatDate = sdfNow.format(date);
 
-        android_id = android.provider.Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
         Log.d(TAG, "Filename " + file.getName());
@@ -254,8 +291,8 @@ public class MainActivity extends AppCompatActivity {
 
         mMyAPI = retrofit.create(MyAPI.class);
 
-        Intent intent = new Intent(getApplicationContext(), Loading.class);
-        startActivity(intent); //로딩화면 출력
+//        Intent intent = new Intent(getApplicationContext(), Loading.class);
+//        startActivity(intent); //로딩화면 출력
 
         Call<AccountItem> call = mMyAPI.upload(images,android_id,formatDate);
         call.enqueue(new Callback<AccountItem>() {
@@ -267,12 +304,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<AccountItem> call, Throwable t) {
                 Log.i(TAG,"Fail msg : " + t.getMessage());
-
-
-
                 getplant();
-
-
 
             }
         });
@@ -288,25 +320,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<AccountItem>> call, Response<List<AccountItem>> response) {
                 if(response.isSuccessful()){
+
                     List<AccountItem> versionList =response.body();
                     Log.d(TAG,"뭐지"+response.body().toString());
                     String first_txt = "";
                     String first_percent_txt = "";
                     String second_txt = "";
                     String second_percent_txt = "";
+                    String third_txt = "";
+                    String third_percent_txt = "";
 
                     String my_images = "";
 
                     for(AccountItem accountItem:versionList){
                         first_txt += accountItem.getFirst_name();
-                        first_percent_txt += "일치율: "+accountItem.getFirst_percent()+"%";
+                        first_percent_txt += accountItem.getFirst_percent();
                         second_txt += accountItem.getSecond_name();
-                        second_percent_txt += "일치율: "+accountItem.getSecond_percent()+"%";
+                        second_percent_txt += accountItem.getSecond_percent();
+                        third_txt += accountItem.getThird_name();
+                        third_percent_txt += accountItem.getThird_percent();
 
-                        my_images += "http://20bba75e5a04.ngrok.io"+accountItem.getImages();  //url주소
+                        my_images += ""+BASE_URL+accountItem.getImages();  //url주소
+
                     }
                     final String one = first_txt;
                     final String two = second_txt;
+                    final String three = third_txt;
 
                     final String my_plant_images = my_images;
 
@@ -320,8 +359,12 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("second_txt",second_txt);
                     intent.putExtra("second_percent_txt",second_percent_txt);
 
+                    intent.putExtra("third_txt",third_txt);
+                    intent.putExtra("third_percent_txt",third_percent_txt);
+
                     intent.putExtra("android_id", android_id);
                     intent.putExtra("formatDate", formatDate);
+
 
 
                     Call<List<AccountItem>> plantconCall = mMyAPI.get_plant_con(one);
@@ -336,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d(TAG,"ㅅ"+one);
                                     Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                    first_img_txt ="http://20bba75e5a04.ngrok.io"+accountItem.getImage();  //url주소
+                                    first_img_txt =""+BASE_URL+accountItem.getImage();  //url주소
 
                                 }
                                 intent.putExtra("my_plant_images",my_plant_images);
@@ -368,11 +411,45 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d(TAG,"ㅅ"+two);
                                     Log.d(TAG,"ㅎ"+accountItem.getName());
 
-                                    second_img_txt ="http://20bba75e5a04.ngrok.io"+accountItem.getImage();  //url주소
+                                    second_img_txt =""+BASE_URL+accountItem.getImage();  //url주소
+                                    Log.d(TAG,"이미지"+second_img_txt);
 
                                 }
                                 intent.putExtra("my_plant_images",my_plant_images);
                                 intent.putExtra("second_img_txt",second_img_txt);
+
+
+//                                startActivity(intent);
+                            } else {
+                                int StatusCode = response.code();
+                                Log.d(TAG, "dd아" + StatusCode);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<AccountItem>> call, Throwable t) {
+                            Log.d(TAG, "실패" + t.getMessage());
+                        }
+
+                    });
+
+                    Call<List<AccountItem>> plantconCall2 = mMyAPI.get_plant_con(three);
+                    plantconCall2.enqueue(new Callback<List<AccountItem>>() {
+                        @Override
+                        public void onResponse(Call<List<AccountItem>> call, Response<List<AccountItem>> response) {
+                            if (response.isSuccessful()) {
+                                List<AccountItem> versionList =response.body();
+                                String third_img_txt = "";
+
+                                for(AccountItem accountItem:versionList){
+                                    Log.d(TAG,"삼"+three);
+                                    Log.d(TAG,"셋"+accountItem.getName());
+
+                                    third_img_txt =""+BASE_URL+accountItem.getImage();  //url주소
+
+                                }
+                                intent.putExtra("my_plant_images",my_plant_images);
+                                intent.putExtra("third_img_txt",third_img_txt);
 
 
                                 startActivity(intent);
@@ -388,7 +465,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     });
-
                 }else{
                     int StatusCode =response.code();
                     Log.d(TAG,"dd아"+StatusCode);
