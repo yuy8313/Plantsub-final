@@ -59,36 +59,6 @@
                 android:textSize="20dp" />
 
 
-<!--            <ImageView-->
-<!--                android:id="@+id/plantimg_detail"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:gravity="center"-->
-<!--                android:scaleType="fitCenter" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/plantname_detail"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:gravity="center"-->
-<!--                android:textSize="50dp" />-->
-
-
-<!--            <TextView-->
-<!--                android:id="@+id/plantflower_detail"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="0.5"-->
-<!--                android:textSize="20dp" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/plantcontent_detail"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:textSize="20dp" />-->
 
 
         </LinearLayout>

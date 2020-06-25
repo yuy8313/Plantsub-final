@@ -437,18 +437,6 @@ public class PlnatCarmer extends AppCompatActivity {
         });
 
 
-//        call.enqueue(new Callback<AccountItem>() {
-//            @Override
-//            public void onResponse(Call<AccountItem> call, Response<ResponseBody> response) {
-//                Log.i("good", "good");
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                Log.i(TAG,"Fail msg : " + t.getMessage());
-//
-//            }
-//        });
     }
 
     private void initMyAPI(String baseUrl){

@@ -208,11 +208,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File createImage() throws IOException{
-//        String imageFileName ="tmp_" + String.valueOf(System.currentTimeMillis())+".jpg";
-//        File storageDir = new File(Environment.getExternalStorageDirectory(),imageFileName);
-//        mCurrentPhotoPath = storageDir.getAbsolutePath();
-//        return storageDir;
-
 
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "TEST_" + timeStamp + "_";

@@ -44,9 +44,6 @@ public class PlantBook  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.plant_book);
 
-//        final TextView book_txt = (TextView) findViewById(R.id.book_txt);
-//        final ImageView book_image = (ImageView) findViewById(R.id.book_image);
-
 
 
 
